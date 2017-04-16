@@ -47,8 +47,8 @@ var viewProducts = function() {
             console.log(`${res[i].item_id} | ${res[i].product_name} | ${res[i].department_name} | Cost: $${res[i].price} | Quantity: ${res[i].stock_quantity}`);
             console.log("=========================================");
         }
+        end();
     });
-    end();
 }
 
 var viewLow = function() {
@@ -62,9 +62,8 @@ var viewLow = function() {
             console.log(`${res[i].item_id} | ${res[i].product_name} | ${res[i].department_name} | Cost: $${res[i].price} | Quantity: ${res[i].stock_quantity}`);
             console.log("=========================================");
         }
+        end();
     });
-    end();
-
 }
 
 var addInven = function() {
@@ -107,7 +106,7 @@ var addInven = function() {
                             var updateVal = parseInt(chosenProduct.stock_quantity) + parseInt(answer.quantity);
                             console.log(res);
                             console.log(`Quantity successfully updated. We now carry a total of ${updateVal} of ${chosenProduct.product_name}`);
-                            end();
+                            nextCmd();
                         })
                     });
                 }
@@ -160,14 +159,36 @@ var addItem = function() {
         }, function(err) {
             if (err) throw err;
             console.log(`Successfully added ${answer.item}!`);
+            nextCmd();
         })
     });
 }
+
+var nextCmd = function() {
+	inquirer.prompt([
+		{
+			name: "choice",
+			type: "list",
+			message: "Are you done?",
+			choices: ["Yes", "No"]
+		}
+	]).then(function(answer) {
+		console.log(answer);
+		if(answer.choice === "Yes") {
+			end();
+			console.log("Good Day Manager");
+		} else {
+			startManager();
+		}
+	});
+}
+
 
 var end = function() {
     connection.end(function(err) {
         // The connection is terminated now 
     });
 }
+
 
 startManager();

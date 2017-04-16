@@ -10,11 +10,11 @@ var connection = mysql.createConnection({
 });
 
 // connection.connect(function(err){
-// 	if(err) {
-// 		console.log(err);
-// 	} else {
-// 		console.log("connected as id " + connection.threadId);
-// 	}
+//  if(err) {
+//      console.log(err);
+//  } else {
+//      console.log("connected as id " + connection.threadId);
+//  }
 // });
 //============================================================
 var queryItems = "SELECT * FROM products";
@@ -43,24 +43,22 @@ connection.query(queryItems, function(err, res) {
             if (res[i].product_name === answer.choice) {
                 chosenProduct = res[i];
                 //console.log(chosenProduct);
-                inquirer.prompt([
-                    {
-                        name: "quantity",
-                        type: "input",
-                        message: "How many would you like to purchase?",
-                        validate: function(value) {
-                            if (isNaN(value) === false) {
-                                return true;
-                            }
-                            return false;
+                inquirer.prompt([{
+                    name: "quantity",
+                    type: "input",
+                    message: "How many would you like to purchase?",
+                    validate: function(value) {
+                        if (isNaN(value) === false) {
+                            return true;
                         }
+                        return false;
                     }
-                ]).then(function(answer) {
+                }]).then(function(answer) {
                     //console.log(answer);
                     //console.log(chosenProduct.stock_quantity);
 
-                    if(answer.quantity > chosenProduct.stock_quantity) {
-                        console.log(`I am sorry. We do not carry that many items in stock. Please input a valid quantity for ${chosenProduct.product_name}. We currently only have ${chosenProduct.stock_quantity} in our inventory` );
+                    if (answer.quantity > chosenProduct.stock_quantity) {
+                        console.log(`I am sorry. We do not carry that many items in stock. Please input a valid quantity for ${chosenProduct.product_name}. We currently only have ${chosenProduct.stock_quantity} in our inventory`);
                     } else {
                         var query = "UPDATE products SET stock_quantity = stock_quantity - ? WHERE product_name = ?"
                         connection.query(query, [answer.quantity, chosenProduct.product_name], function(err, res) {
@@ -76,7 +74,7 @@ connection.query(queryItems, function(err, res) {
                             end();
                         });
                     }
-                }) 
+                })
 
             }
         }
@@ -85,6 +83,6 @@ connection.query(queryItems, function(err, res) {
 
 var end = function() {
     connection.end(function(err) {
-    // The connection is terminated now 
+        // The connection is terminated now 
     });
 }
