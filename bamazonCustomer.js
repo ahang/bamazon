@@ -67,12 +67,13 @@ connection.query(queryItems, function(err, res) {
                             if (err) throw error;
 
                             //console.log(res);
-                            var total = answer.quantity * chosenProduct.price;
+                            var total = parseFloat(answer.quantity) * parseFloat(chosenProduct.price);
                             var orderNum = Math.floor(Math.random() * 90000) + 10000;
                             console.log(total);
-                            console.log(`Thank you for purchasing from Bamazon. Your total is $${total}. Your order will be delivered in 9 days after confirmation of payment. Please make sure your billing information is up to date. You will be charged shortly.`);
+                            console.log(`Thank you for purchasing from Bamazon. Your total is $${total.toFixed(2)}. Your order will be delivered in 9 days after confirmation of payment. Please make sure your billing information is up to date. You will be charged shortly.`);
                             console.log("=================================================");
                             console.log(`Transaction completed. Your Order Number is #${orderNum}. Have a nice day. We thank you for for shopping at Bamazon!`);
+                            end();
                         });
                     }
                 }) 
@@ -82,3 +83,8 @@ connection.query(queryItems, function(err, res) {
     });
 });
 
+var end = function() {
+    connection.end(function(err) {
+    // The connection is terminated now 
+    });
+}
