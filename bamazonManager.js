@@ -28,6 +28,10 @@ inquirer.prompt([
 		console.log("These items are low");
 		viewLow();
 	}
+	else if(answer.choice === "Add to Inventory") {
+		console.log("Adding..");
+		addInven();
+	}
 
 });
 
@@ -60,7 +64,48 @@ var viewLow = function() {
 }
 
 var addInven = function() {
+	var queryItems = "SELECT * FROM products";
 
+	connection.query(queryItems, function(err, res) {
+		inquirer.prompt([
+			{
+		        name: "choice",
+		        type: "list",
+		        message: "What item would you like to add available stock quantity for?",
+		        choices: function() {
+		            var choiceArray = [];
+		            for (var i = 0; i < res.length; i++) {
+		                choiceArray.push(res[i].product_name);
+		            }
+		            return choiceArray
+		        }
+		    }
+		]).then(function(response) {
+			console.log(response);
+	        var chosenProduct;
+	        for (var i = 0; i < res.length; i++) {
+	            if (res[i].product_name === response.choice) {
+	                chosenProduct = res[i];
+	                //console.log(chosenProduct);
+	                inquirer.prompt([
+	                    {
+	                        name: "quantity",
+	                        type: "input",
+	                        message: "How many would you like to add?",
+	                        validate: function(value) {
+	                            if (isNaN(value) === false) {
+	                                return true;
+	                            }
+	                            return false;
+	                        }
+	                    }
+	                ]).then(function(answer) {
+	                	console.log(answer);
+	                });
+	            }
+	        }
+		});
+	})
 }
 
 var addItem = function() {
@@ -68,13 +113,6 @@ var addItem = function() {
 }
 
 
-
-// Create a new Node application called bamazonManager.js. Running this application will:
-// List a set of menu options:
-// View Products for Sale
-// View Low Inventory
-// Add to Inventory
-// Add New Product
 // If a manager selects View Products for Sale, the app should list every available item: the item IDs, names, prices, and quantities.
 // If a manager selects View Low Inventory, then it should list all items with a inventory count lower than five.
 // If a manager selects Add to Inventory, your app should display a prompt that will let the manager "add more" of any item currently in the store.
