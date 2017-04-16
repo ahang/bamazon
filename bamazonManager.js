@@ -45,16 +45,17 @@ var viewProducts = function() {
 }
 
 var viewLow = function() {
-	// var queryItems = `SELECT product_name FROM products GROUP BY product_name HAVING COUNT(stock_quantity) < 5`;
+	var queryItems = `SELECT * FROM products GROUP BY product_name HAVING stock_quantity < 5`;
 
-	// connection.query(queryItems, function(err, res) {
-	//     console.log(`These are our available products for sell`);
-	//     console.log(res)
-	//     for (var i = 0; i < res.length; i++) {
-	//         console.log(`${res[i].item_id} | ${res[i].product_name} | ${res[i].department_name} | Cost: $${res[i].price} | Quantity: ${res[i].stock_quantity}`);
-	//         console.log("=========================================");
-	//     }
-	// });
+	connection.query(queryItems, function(err, res) {
+	    console.log(`The below products need to be replenish. We currently carry less than 5 of the below products.`);
+	    console.log("===================================================");
+	    //console.log(res);
+	    for (var i = 0; i < res.length; i++) {
+	        console.log(`${res[i].item_id} | ${res[i].product_name} | ${res[i].department_name} | Cost: $${res[i].price} | Quantity: ${res[i].stock_quantity}`);
+	        console.log("=========================================");
+	    }
+	});
 
 }
 
