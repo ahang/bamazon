@@ -18,7 +18,7 @@ var startManager = function() {
         message: "Welcome Manager, what would you like to do?",
         choices: ["View Products for Sale", "View Low Inventory", "Add to Inventory", "Add New Product"]
     }]).then(function(answer) {
-        console.log(answer);
+        //console.log(answer);
         if (answer.choice === "View Products for Sale") {
             console.log("Viewing All Products");
             viewProducts();
@@ -82,7 +82,7 @@ var addInven = function() {
                 return choiceArray
             }
         }]).then(function(response) {
-            console.log(response);
+            //console.log(response);
             var chosenProduct;
             for (var i = 0; i < res.length; i++) {
                 if (res[i].product_name === response.choice) {
@@ -99,7 +99,7 @@ var addInven = function() {
                             return false;
                         }
                     }]).then(function(answer) {
-                        console.log(answer);
+                        //console.log(answer);
                         var query = "UPDATE products SET stock_quantity = stock_quantity + ? WHERE product_name = ?";
                         connection.query(query, [answer.quantity, chosenProduct.product_name], function(err, res) {
                             if (err) throw error;
@@ -149,7 +149,7 @@ var addItem = function() {
             }
         }
     ]).then(function(answer) {
-        console.log(answer);
+        //console.log(answer);
         var query = "INSERT INTO products SET?";
         connection.query(query, {
             product_name: answer.item,
@@ -174,7 +174,7 @@ var nextCmd = function() {
 		}
 	]).then(function(answer) {
 		console.log(answer);
-		if(answer.choice === "Yes") {
+		if (answer.choice === "Yes") {
 			end();
 			console.log("Good Day Manager");
 		} else {
