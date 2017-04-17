@@ -70,13 +70,13 @@ connection.query(queryItems, function(err, res) {
 
                             //console.log(res);
                             var total = answer.quantity * chosenProduct.price;
-                            // var dept = chosenProduct.department_name.toString();
-                            // console.log(dept);
-                            // var deptQuery = "UPDATE departments SET total_sales = total_sales + total WHERE department_name = dept";
-                            // connection.query(deptQuery, function(err, res) {
-                            //     if (err) throw err;
-                            //     console.log("Great Success");
-                            // });
+                            var dept = chosenProduct.department_name;
+                            console.log(dept);
+                            var deptQuery = "UPDATE departments SET total_sales = total_sales + total WHERE department_name = dept";
+                            connection.query(deptQuery, function(err, res) {
+                                if (err) throw err;
+                                console.log("Great Success");
+                            });
                             var orderNum = Math.floor(Math.random() * 90000) + 10000;
                             console.log(total);
                             console.log(`Thank you for purchasing from Bamazon. Your total is $${total.toFixed(2)}. Your order will be delivered in 9 days after confirmation of payment. Please make sure your billing information is up to date. You will be charged shortly.`);
