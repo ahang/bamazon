@@ -72,8 +72,8 @@ connection.query(queryItems, function(err, res) {
                             var total = answer.quantity * chosenProduct.price;
                             var dept = chosenProduct.department_name;
                             console.log(dept);
-                            var deptQuery = "UPDATE departments SET total_sales = total_sales + total WHERE department_name = dept";
-                            connection.query(deptQuery, function(err, res) {
+                            var deptQuery = "UPDATE departments SET total_sales = total_sales + ? WHERE department_name = ?";
+                            connection.query(deptQuery, [total, dept], function(err, res) {
                                 if (err) throw err;
                                 console.log("Great Success");
                             });
