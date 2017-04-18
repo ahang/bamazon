@@ -1,13 +1,14 @@
 var inquirer = require("inquirer");
 var mysql = require("mysql");
-require("console.table");
+var Table = require("cli-table");
+
 
 //======================================================
 var connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
     user: "root",
-    password: "mypass",
+    password: "m5J5V77YhJgu",
     database: "Bamazon"
 });
 //======================================================
@@ -37,20 +38,23 @@ var viewProduct = function() {
     var query = "SELECT department_id, department_name, over_head_costs, total_sales, (total_sales - over_head_costs) as total_profit FROM departments";
     connection.query(query, function(err, res) {
         //console.log("Working..");
-        //loops through the results and puts them into a table
+        //instantiates a new table
+        var table = new Table({
+            //declaring column names
+            head: ["Department ID", "Department Name", "Over Head Costs", "Total Sales", "Total Profit"],
+            //setting width of table
+            colWidths: [25, 30, 25, 25, 25]
+        });
+        //loops through the results and pushes it into the table
         for (var i = 0; i < res.length; i++) {
-            console.table([{
-                "Department ID": res[i].department_id,
-                "Department Name": res[i].department_name,
-                "Over Head Costs": "$" + res[i].over_head_costs,
-                "Total Sales": "$" + res[i].total_sales,
-                "Total Profit": "$" + res[i].total_profit
-            }]);
+            table.push(
+                [res[i].department_id, res[i].department_name, "$" + res[i].over_head_costs, "$" + res[i].total_sales, "$" + res[i].total_profit]
+            );
         }
+        //displays the table
+        console.log(table.toString());
         end();
-
     });
-
 }
 
 var createDept = function() {
@@ -88,7 +92,7 @@ var createDept = function() {
 
 var end = function() {
     connection.end(function(err) {
-        // The connection is terminated now 
+        // The connection is terminated now
     });
 }
 
