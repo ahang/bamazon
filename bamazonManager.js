@@ -11,6 +11,7 @@ var connection = mysql.createConnection({
 });
 //======================================================
 
+//prompts the manager what they want to do
 var startManager = function() {
     inquirer.prompt([{
         name: "choice",
@@ -40,9 +41,10 @@ var startManager = function() {
 
 var viewProducts = function() {
     var queryItems = "SELECT * FROM products";
-
+    //this just gets all the data available from the products table
     connection.query(queryItems, function(err, res) {
         console.log(`These are our available products for sell`);
+        //loops through and prints out each of the items
         for (var i = 0; i < res.length; i++) {
             console.log(`${res[i].item_id} | ${res[i].product_name} | ${res[i].department_name} | Cost: $${res[i].price} | Quantity: ${res[i].stock_quantity}`);
             console.log("=========================================");
@@ -53,7 +55,7 @@ var viewProducts = function() {
 
 var viewLow = function() {
     var queryItems = `SELECT * FROM products GROUP BY product_name HAVING stock_quantity < 5`;
-
+    //checks to see what products have less then 5 stock_quantity
     connection.query(queryItems, function(err, res) {
         console.log(`The below products need to be replenish. We currently carry less than 5 of the below products.`);
         console.log("===================================================");
@@ -68,7 +70,7 @@ var viewLow = function() {
 
 var addInven = function() {
     var queryItems = "SELECT * FROM products";
-
+    //allows the users to update stock quantity value and makes a connection call to the product table
     connection.query(queryItems, function(err, res) {
         inquirer.prompt([{
             name: "choice",
@@ -84,6 +86,7 @@ var addInven = function() {
         }]).then(function(response) {
             //console.log(response);
             var chosenProduct;
+            //loops through to check what the users response it and sets it to an accessible variable for user later
             for (var i = 0; i < res.length; i++) {
                 if (res[i].product_name === response.choice) {
                     chosenProduct = res[i];
@@ -100,11 +103,12 @@ var addInven = function() {
                         }
                     }]).then(function(answer) {
                         //console.log(answer);
+                        //grabs the users responses and updates the appropriate item with the approriate quantity
                         var query = "UPDATE products SET stock_quantity = stock_quantity + ? WHERE product_name = ?";
                         connection.query(query, [answer.quantity, chosenProduct.product_name], function(err, res) {
-                            if (err) throw error;
+                            if (err) throw "Oops please try again";
                             var updateVal = parseInt(chosenProduct.stock_quantity) + parseInt(answer.quantity);
-                            console.log(res);
+                            //console.log(res);
                             console.log(`Quantity successfully updated. We now carry a total of ${updateVal} of ${chosenProduct.product_name}`);
                             nextCmd();
                         })
@@ -115,6 +119,7 @@ var addInven = function() {
     })
 }
 
+//allows the users to add an item
 var addItem = function() {
     inquirer.prompt([{
             name: "item",
@@ -151,36 +156,36 @@ var addItem = function() {
     ]).then(function(answer) {
         //console.log(answer);
         var query = "INSERT INTO products SET?";
+        //makes a connection call and inserts the users answer in an object to be added to the prouct table
         connection.query(query, {
             product_name: answer.item,
             department_name: answer.department,
             price: answer.price,
             stock_quantity: answer.quantity
         }, function(err) {
-            if (err) throw err;
+            if (err) throw "Oops please try again";
             console.log(`Successfully added ${answer.item}!`);
             nextCmd();
         })
     });
 }
 
+//userability feature to ask what the user wants to do or else end the mysql connection.
 var nextCmd = function() {
-	inquirer.prompt([
-		{
-			name: "choice",
-			type: "list",
-			message: "Are you done?",
-			choices: ["Yes", "No"]
-		}
-	]).then(function(answer) {
-		console.log(answer);
-		if (answer.choice === "Yes") {
-			end();
-			console.log("Good Day Manager");
-		} else {
-			startManager();
-		}
-	});
+    inquirer.prompt([{
+        name: "choice",
+        type: "list",
+        message: "Are you done?",
+        choices: ["Yes", "No"]
+    }]).then(function(answer) {
+        console.log(answer);
+        if (answer.choice === "Yes") {
+            end();
+            console.log("Good Day Manager");
+        } else {
+            startManager();
+        }
+    });
 }
 
 
