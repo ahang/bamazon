@@ -22,6 +22,7 @@ var connection = mysql.createConnection({
 //query string to display all products user can select from
 var queryItems = "SELECT * FROM products";
 
+
 connection.query(queryItems, function(err, res) {
     console.log(`Welcome to Bamazon! Below is our current invetory available for purchase. Here at Bamazon we strive for top notch customer service. Please do not hestitate to reach out!`);
     //after connection is establish loop through to display the available items.
@@ -80,6 +81,7 @@ connection.query(queryItems, function(err, res) {
                     if (answer.quantity > chosenProduct.stock_quantity) {
                         //if the user quantity is greater than the available product spit the below message
                         console.log(`I am sorry. We do not carry that many items in stock. Please input a valid quantity for ${chosenProduct.product_name}. We currently only have ${chosenProduct.stock_quantity} in our inventory`);
+                        end();
                     } else {
                         //if the user quantity is less then the stock quantity, update the product table accordingly with the users quantity, also adds the product_sales based on the product price multiplied by the users quantity.
                         var query = "UPDATE products SET stock_quantity = stock_quantity - ?, product_sales = product_sales + (price * ?) WHERE product_name = ?";
@@ -88,7 +90,6 @@ connection.query(queryItems, function(err, res) {
                             //console.log(`This is the product_sales that is being added to the table ${chosenProduct.product_sales}`);
                             //console.log(`Users quantity: ${answer.quantity}`);
                             if (err) throw "Something went wrong. Please try again";
-
                             //console.log(res);
                             var total = answer.quantity * chosenProduct.price; // gets the total the user will be paying
                             var dept = chosenProduct.department_name; // grabbing the department name of the chosen item

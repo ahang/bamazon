@@ -177,7 +177,8 @@ var addItem = function() {
             product_name: answer.item,
             department_name: answer.department,
             price: answer.price,
-            stock_quantity: answer.quantity
+            stock_quantity: answer.quantity,
+            product_sales: 0
         }, function(err) {
             if (err) throw "Oops please try again";
             console.log(`Successfully added ${answer.item}!`);
@@ -194,7 +195,7 @@ var nextCmd = function() {
         message: "Are you done?",
         choices: ["Yes", "No"]
     }]).then(function(answer) {
-        console.log(answer);
+        //console.log(answer);
         if (answer.choice === "Yes") {
             end();
             console.log("Good Day Manager");
