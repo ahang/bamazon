@@ -11,7 +11,7 @@ Setup
 4. Open up the folder in your favorite text editor.
 5. Use `schema.sql` to create the necessary database and tables
 6. Use `seeds.sql` to generate some data.
-7. Navigate to `bamazonCustomer.js` update the password field with your password to access the database.
+7. Navigate to `bamazonCustomer.js`, `bamazonManager.js` and `bamazonSupervisor.js` and update the password field with your password to access the database.
 
 Running the App
 1. To access the customer store front, type in `node bamazonCustomer.js`
