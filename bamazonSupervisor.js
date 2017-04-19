@@ -34,7 +34,7 @@ var startSupervisor = function() {
 }
 
 var viewProduct = function() {
-	//grabbing the department table and spitting it out. Making an alias temporarily to create a total_profit column during the query call
+    //grabbing the department table and spitting it out. Making an alias temporarily to create a total_profit column during the query call
     var query = "SELECT department_id, department_name, over_head_costs, total_sales, (total_sales - over_head_costs) as total_profit FROM departments";
     connection.query(query, function(err, res) {
         //console.log("Working..");
@@ -58,7 +58,7 @@ var viewProduct = function() {
 }
 
 var createDept = function() {
-	//ask the user the following information
+    //ask the user the following information
     inquirer.prompt([{
             name: "department",
             type: "input",

@@ -1,13 +1,14 @@
 var inquirer = require("inquirer");
 var mysql = require("mysql");
+var Table = require("cli-table");
+
 //======================================================
 var connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
     user: "root",
-    password: "mypass",
+    password: "m5J5V77YhJgu",
     database: "Bamazon"
-
 });
 //======================================================
 
@@ -32,9 +33,7 @@ var startManager = function() {
         } else {
             console.log("Adding New Product");
             addItem();
-
         }
-
     });
 }
 
@@ -44,11 +43,21 @@ var viewProducts = function() {
     //this just gets all the data available from the products table
     connection.query(queryItems, function(err, res) {
         console.log(`These are our available products for sell`);
-        //loops through and prints out each of the items
+        //instantiates new table
+        var table = new Table({
+            //declaring column names
+            head: ["Item ID", "Product Name", "Department Name", "Cost", "Quantity Available"],
+            //width of each of the columns
+            colWidths: [25, 30, 25, 25, 25]
+        });
+        //loops through the results and pushes it to the table
         for (var i = 0; i < res.length; i++) {
-            console.log(`${res[i].item_id} | ${res[i].product_name} | ${res[i].department_name} | Cost: $${res[i].price} | Quantity: ${res[i].stock_quantity}`);
-            console.log("=========================================");
+            table.push(
+                [res[i].item_id, res[i].product_name, res[i].department_name, "$" + res[i].price, res[i].stock_quantity]
+            );
         }
+        //displays the table
+        console.log(table.toString());
         end();
     });
 }
@@ -60,10 +69,17 @@ var viewLow = function() {
         console.log(`The below products need to be replenish. We currently carry less than 5 of the below products.`);
         console.log("===================================================");
         //console.log(res);
+        var table = new Table({
+            head: ["Item ID", "Product Name", "Department Name", "Cost", "Quantity Available"],
+            colWidths: [25, 30, 25, 25, 25]
+        });
+        //loops through and prints out each of the items
         for (var i = 0; i < res.length; i++) {
-            console.log(`${res[i].item_id} | ${res[i].product_name} | ${res[i].department_name} | Cost: $${res[i].price} | Quantity: ${res[i].stock_quantity}`);
-            console.log("=========================================");
+            table.push(
+                [res[i].item_id, res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity]
+            );
         }
+        console.log(table.toString());
         end();
     });
 }
@@ -191,7 +207,7 @@ var nextCmd = function() {
 
 var end = function() {
     connection.end(function(err) {
-        // The connection is terminated now 
+        // The connection is terminated now
     });
 }
 

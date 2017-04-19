@@ -1,11 +1,12 @@
 var inquirer = require("inquirer");
 var mysql = require("mysql");
+var Table = require("cli-table");
 //======================================================
 var connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
     user: "root",
-    password: "mypass",
+    password: "m5J5V77YhJgu",
     database: "Bamazon"
 });
 
@@ -22,12 +23,24 @@ var connection = mysql.createConnection({
 var queryItems = "SELECT * FROM products";
 
 connection.query(queryItems, function(err, res) {
-    console.log(`Welcome to Bamazon! Below is our current invetory available for purchase. Here at Bamazon we strive for top notch customer service. Please do not hestitate to reach out`);
+    console.log(`Welcome to Bamazon! Below is our current invetory available for purchase. Here at Bamazon we strive for top notch customer service. Please do not hestitate to reach out!`);
     //after connection is establish loop through to display the available items.
+    //instantiates new table
+    var table = new Table({
+        //declaring column names
+        head: ["Item ID", "Product Name", "Department Name", "Cost", "Quantity Available"],
+        //setting the width of each of the columns
+        colWidths: [25, 30, 25, 25, 25]
+    });
+    //loops through the results and pushes it toe the table
     for (var i = 0; i < res.length; i++) {
-        console.log(`${res[i].item_id} | ${res[i].product_name} | ${res[i].department_name} | Cost: $${res[i].price} | Quantity: ${res[i].stock_quantity}`);
-        console.log("=========================================");
+        table.push(
+            [res[i].item_id, res[i].product_name, res[i].department_name, "$" + res[i].price, res[i].stock_quantity]
+        );
     }
+    //displays it
+
+    console.log(table.toString());
     inquirer.prompt([{
         name: "choice",
         type: "list",
@@ -43,7 +56,7 @@ connection.query(queryItems, function(err, res) {
     }]).then(function(answer) {
         //console.log(answer);
         var chosenProduct;
-        //loops through all available products and checks to see what the user selected 
+        //loops through all available products and checks to see what the user selected
         for (var i = 0; i < res.length; i++) {
             if (res[i].product_name === answer.choice) {
                 chosenProduct = res[i];
@@ -103,6 +116,6 @@ connection.query(queryItems, function(err, res) {
 
 var end = function() {
     connection.end(function(err) {
-        // The connection is terminated now 
+        // The connection is terminated now
     });
 }
